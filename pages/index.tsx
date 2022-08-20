@@ -10,8 +10,8 @@ const Home: NextPage = () => {
 	const [value, setValue] = useState<Date>(new Date())
 	const theme = useMantineTheme();
 	return (
-		<div style={{ display: 'flex', flexDirection: 'column', justifyItems: 'center', height: '100vh', border: '1px solid black' }}>
-			<div style={{ border: '1px solid black'}}>
+		<div className="h-screen flex flex-col">
+			<div className={"p-8 border-b border-gray-200"}>
 				<DatePicker value={value} onChange={val => val && setValue(val)}
 					dayStyle={(date) =>
 						((date.toDateString() === new Date().toDateString()) && value.toDateString() !== new Date().toDateString()
@@ -20,14 +20,14 @@ const Home: NextPage = () => {
 					}
 				/>
 			</div>
-			<div style={{ display: 'flex', justifyContent: 'space-around', height: '100%', border: '1px solid black' }}>
-				<div style={{ flexGrow: 1, height: '100%' }}>
+			<div className="h-full grid grid-cols-3 overflow-hidden">
+				<div className="h-full overflow-scroll">
 					<DayView date={value} />
 				</div>
-				<div style={{ flexGrow: 1 }}>
+				<div className="h-full overflow-scroll">
 					<WeekView date={value} />
 				</div>
-				<div style={{ flexGrow: 1 }}>
+				<div className="h-full overflow-scroll">
 					<MonthView date={value} />
 				</div>
 			</div>
