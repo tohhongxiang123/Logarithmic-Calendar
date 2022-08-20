@@ -1,3 +1,6 @@
+import { useMantineTheme } from "@mantine/core"
+
+
 interface WeekViewProps {
     date: Date
 }
@@ -9,11 +12,17 @@ export default function WeekView({ date }: WeekViewProps) {
         return d
     })
 
+    const theme = useMantineTheme()
+
     return (
         <>
-            <ul>
+            <ul style={{ listStyleType: 'none', padding: 0, margin: 0 }}>
                 {thisWeek.map(day => (
-                    <li key={day.toLocaleDateString()}>{day.toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</li>
+                    <li key={day.toLocaleDateString()}>
+                        <div style={{ width: '100%', minHeight: '100px', padding: theme.spacing.lg, paddingLeft: 0 }}>
+                            {day.toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' })}
+                        </div>
+                    </li>
                 ))}
             </ul>
         </>
