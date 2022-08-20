@@ -16,10 +16,10 @@ export default function WeekView({ date }: WeekViewProps) {
 
     return (
         <>
-            <ul style={{ listStyleType: 'none', padding: 0, margin: 0 }}>
+            <ul className="flex flex-col divide-y-2">
                 {thisWeek.map(day => (
-                    <li key={day.toLocaleDateString()}>
-                        <div style={{ width: '100%', minHeight: '100px', padding: theme.spacing.lg, paddingLeft: 0 }}>
+                    <li key={day.toLocaleDateString()} className="h-32 p-2">
+                        <div>
                             {day.toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' })}
                         </div>
                     </li>

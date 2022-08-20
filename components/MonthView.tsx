@@ -18,13 +18,13 @@ export default function MonthView({ date }: MonthViewProps) {
     return (
         <>
             {months.map(month => (
-                <div key={month}>
-                    <p>{monthNames[month]}</p>
+                <div key={month} className="mb-4 flex flex-col">
+                    <p className="sticky top-0 bg-white shadow-sm px-4 py-2"><strong>{monthNames[month]}</strong></p>
                     <ul>
                         {dates
                             .filter(date => date.getMonth() === month)
                             .map(day => (
-                                <li key={day.toLocaleDateString()}>{day.toLocaleDateString()}</li>
+                                <li key={day.toLocaleDateString()} className="h-12 p-2">{day.toLocaleDateString()}</li>
                             ))
                         }
                     </ul>

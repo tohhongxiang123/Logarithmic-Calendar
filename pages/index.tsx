@@ -20,7 +20,7 @@ const Home: NextPage = () => {
 					}
 				/>
 			</div>
-			<div className="h-full grid grid-cols-3 overflow-hidden">
+			<div className="h-full grid grid-cols-3 overflow-hidden divide-x-2">
 				<div className="h-full overflow-scroll">
 					<DayView date={value} />
 				</div>
