@@ -13,6 +13,7 @@ const Home: NextPage = () => {
 		<div className="h-screen flex flex-col">
 			<div className={"p-8 border-b border-gray-200"}>
 				<DatePicker value={value} onChange={val => val && setValue(val)}
+					dropdownType="modal"
 					dayStyle={(date) =>
 						((date.toDateString() === new Date().toDateString()) && value.toDateString() !== new Date().toDateString()
 							? { backgroundColor: theme.colors.gray[2], fontWeight: 'bold', borderRadius: '100%' }
