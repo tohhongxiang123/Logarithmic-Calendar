@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 
 interface DayViewProps {
     date: Date
@@ -9,17 +9,23 @@ export default function DayView({ date }: DayViewProps) {
 
     const [percentageOfDayPassed, setPercentageOfDayPassed] = useState(getPercentageOfDayPassed(date))
     useEffect(() => {
+        setPercentageOfDayPassed(getPercentageOfDayPassed(date))
         const t = setInterval(() => {
             setPercentageOfDayPassed(getPercentageOfDayPassed(date))
         }, 1000 * 60) // update every minute
-        
+
         return () => clearTimeout(t)
+    }, [date])
+
+    const currentTimingIndicatorRef = useRef<HTMLDivElement | null>(null)
+    useEffect(() => {
+        currentTimingIndicatorRef.current && currentTimingIndicatorRef.current.scrollIntoView({ behavior: 'smooth' })
     }, [])
 
     return (
         <div className="flex flex-col relative">
             <ul className="flex flex-col">
-                <div className="border-b border-t border-red-500 bg-red-500 h-0 w-full absolute flex" style={{ top: `${percentageOfDayPassed}%` }}>
+                <div ref={currentTimingIndicatorRef} className="border-b border-t border-red-500 bg-red-500 h-0 w-full absolute flex" style={{ top: `${percentageOfDayPassed}%` }}>
                     <div className="h-2 w-2 bg-red-500 -mt-1 -ml-1 rotate-45 rounded-sm" />
                 </div>
                 {hourlyTimes.map(time => (
