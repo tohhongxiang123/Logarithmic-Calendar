@@ -49,7 +49,8 @@ function getPercentageOfDayPassed(date: Date) {
         const startOfDay = new Date()
         startOfDay.setHours(0, 0, 0, 0)
 
-        return (currentDate.getTime() - startOfDay.getTime()) / (1000 * 60 * 60 * 24) * 100
+        const percentage = (currentDate.getTime() - startOfDay.getTime()) / (1000 * 60 * 60 * 24) * 100
+        return Math.round(percentage * 100) / 100
     }
 
     return -1

@@ -48,6 +48,7 @@ const Home: NextPage = () => {
                                             width={32}
                                             height={32}
                                             alt=""
+                                            referrerPolicy="no-referrer"
                                         />
                                     )}
                                     <p className="font-medium opacity-80">{session.user.name}</p>
