@@ -2,13 +2,21 @@ import { Button, ScrollArea, useMantineTheme } from "@mantine/core";
 import { Calendar } from "@mantine/dates";
 import type { NextPage } from "next";
 import { signIn, signOut, useSession } from "next-auth/react";
-import { CSSProperties, useState } from "react";
+import { CSSProperties, useEffect, useState } from "react";
 import DayView from "../components/DayView";
 import MonthView from "../components/MonthView";
 import WeekView from "../components/WeekView";
 
 const Home: NextPage = () => {
     const { data: session } = useSession();
+
+    useEffect(() => {
+        (async function () {
+            if (!session) return
+            const response = await fetch("/api/listCalendarEvents").then(res => res.json())
+            console.log({ response })
+        })()
+    }, [session])
 
     const [value, setValue] = useState<Date>(new Date());
 

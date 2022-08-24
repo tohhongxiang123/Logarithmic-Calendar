@@ -11,7 +11,7 @@ export default function SignIn({ providers, callbackUrl }: InferGetServerSidePro
                     <h1 className="font-semibold mb-8">Login</h1>
                     {Object.values(providers!).map((provider) => (
                         <div key={provider.name}>
-                            <Button onClick={() => signIn(provider.id, { callbackUrl })} leftIcon={<IconBrandGoogle />}>
+                            <Button onClick={() => signIn(provider.id, { callbackUrl }, { scope: 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/calendar.readonly' })} leftIcon={<IconBrandGoogle />}>
                                 Sign in with {provider.name}
                             </Button>
                         </div>
