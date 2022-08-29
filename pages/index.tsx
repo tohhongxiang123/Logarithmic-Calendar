@@ -6,6 +6,7 @@ import { CSSProperties, useEffect, useState } from "react";
 import DayView from "../components/DayView";
 import MonthView from "../components/MonthView";
 import WeekView from "../components/WeekView";
+import { CalendarEvent } from "../types/Calendar";
 
 const Home: NextPage = () => {
     const { data: session } = useSession();
@@ -13,8 +14,8 @@ const Home: NextPage = () => {
     useEffect(() => {
         (async function () {
             if (!session) return
-            const response = await fetch("/api/listCalendarEvents").then(res => res.json())
-            console.log({ response })
+            const calendarEvents = await fetch("/api/listCalendarEvents").then(res => res.json()) as CalendarEvent[]
+            console.log(calendarEvents.filter(a => new Date(a.start).getTime() > Date.now()))
         })()
     }, [session])
 

@@ -5,7 +5,6 @@ import { CalendarEvent } from "../../types/Calendar";
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const secret = process.env.NEXTAUTH_SECRET
     const token = await getToken({ req, secret })
-
     if (!token) return res.status(401).json({ status: "No access token" })
     const accessToken = token.accessToken as string
 
