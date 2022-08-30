@@ -16,8 +16,6 @@ export default function MonthView({ date, events = [] }: MonthViewProps) {
         return d
     })
 
-    console.log(events.filter(e => !e.start))
-
     const months = Array.from(new Set(dates.map(date => date.getMonth())))
 
     return (
