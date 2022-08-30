@@ -11,11 +11,14 @@ import { CalendarEvent } from "../types/Calendar";
 const Home: NextPage = () => {
     const { data: session } = useSession();
 
+    const [events, setEvents] = useState<CalendarEvent[]>([])
     useEffect(() => {
         (async function () {
             if (!session) return
-            const calendarEvents = await fetch("/api/listCalendarEvents").then(res => res.json()) as CalendarEvent[]
-            console.log(calendarEvents.filter(a => new Date(a.start).getTime() > Date.now()))
+            const calendarId = session.user!.email!
+            const calendarEvents = (await fetch(`/api/calendars/${calendarId}`).then(res => res.json()))
+                .map((e: any) => ({ ...e, start: new Date(e.start), end: new Date(e.end) })) as CalendarEvent[]
+            setEvents(calendarEvents)
         })()
     }, [session])
 
@@ -24,7 +27,7 @@ const Home: NextPage = () => {
     const theme = useMantineTheme();
     return (
         <div className="h-screen flex flex-col">
-            <div className="h-full flex overflow-hidden divide-x-2">
+            <div className="h-full flex overflow-hidden divide-x-2 w-full">
                 <div className={"border-b border-gray-200 flex flex-col"}>
                     <div className="p-8">
                         <Calendar
@@ -71,15 +74,17 @@ const Home: NextPage = () => {
                         )}
                     </div>
                 </div>
-                <ScrollArea className="h-full flex-grow">
-                    <DayView date={value} />
-                </ScrollArea>
-                <ScrollArea className="h-full flex-grow">
-                    <WeekView date={value} />
-                </ScrollArea>
-                <ScrollArea className="h-full flex-grow">
-                    <MonthView date={value} />
-                </ScrollArea>
+                <div className="grid grid-cols-3 divide-x-2 flex-grow">
+                    <ScrollArea className="h-full flex-grow">
+                        <DayView date={value} events={events} />
+                    </ScrollArea>
+                    <ScrollArea className="h-full flex-grow">
+                        <WeekView date={value} events={events} />
+                    </ScrollArea>
+                    <ScrollArea className="h-full flex-grow">
+                        <MonthView date={value} events={events} />
+                    </ScrollArea>
+                </div>
             </div>
         </div>
     );
