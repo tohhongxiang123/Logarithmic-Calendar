@@ -33,7 +33,7 @@ export default function MonthView({ date, events = [] }: MonthViewProps) {
                                     return (
                                         <li key={day.toLocaleDateString()} className="p-2 mb-2">
                                             <span>{day.toLocaleDateString()}</span><br />
-                                            {eventsOnThisDay.map(calendarEvent => <span className="font-semibold">{calendarEvent.name}: {calendarEvent.start.toLocaleTimeString()} - {calendarEvent.end.toLocaleTimeString()}</span>)}
+                                            {eventsOnThisDay.map(calendarEvent => <span key={calendarEvent.id} className="font-semibold">{calendarEvent.name}: {calendarEvent.start.toLocaleTimeString()} - {calendarEvent.end.toLocaleTimeString()}</span>)}
                                         </li>
                                     )
                                 }

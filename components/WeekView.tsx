@@ -14,8 +14,7 @@ export default function WeekView({ date, events = [] }: WeekViewProps) {
         return d
     })
 
-    const theme = useMantineTheme()
-
+    // todo: If event starts and ends on different days, show the days as well
     return (
         <>
             <ul className="flex flex-col divide-y-2">
@@ -30,7 +29,7 @@ export default function WeekView({ date, events = [] }: WeekViewProps) {
                                 </div>
                                 <div>
                                     {eventsOnThisDay.map(calendarEvent => (
-                                        <span className="font-semibold">{calendarEvent.name}: {calendarEvent.start.toLocaleTimeString()} - {calendarEvent.end.toLocaleTimeString()}</span>
+                                        <p key={calendarEvent.id} className="font-semibold">{calendarEvent.name}: {calendarEvent.start.toLocaleTimeString()} - {calendarEvent.end.toLocaleTimeString()}</p>
                                     ))}
                                 </div>
                             </li>

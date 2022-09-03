@@ -2,7 +2,7 @@ import { Button, ScrollArea, useMantineTheme } from "@mantine/core";
 import { Calendar } from "@mantine/dates";
 import type { NextPage } from "next";
 import { signIn, signOut, useSession } from "next-auth/react";
-import { CSSProperties, useEffect, useState } from "react";
+import { CSSProperties, useEffect, useRef, useState } from "react";
 import DayView from "../components/DayView";
 import MonthView from "../components/MonthView";
 import WeekView from "../components/WeekView";
@@ -22,20 +22,30 @@ const Home: NextPage = () => {
         })()
     }, [session])
 
-    const [value, setValue] = useState<Date>(new Date());
+    const [currentDate, setCurrentDate] = useState<Date>(new Date())
 
-    const theme = useMantineTheme();
+    const theme = useMantineTheme()
+
+    const relativeDaysToShow = [-1, 0, 1]
+    const viewport = useRef<HTMLDivElement>(null)
+    const scrollToCurrentDayInDayView = () => {
+        const currentDayIndex = relativeDaysToShow.indexOf(0)
+        viewport?.current && viewport.current.scrollTo({ top: viewport.current.scrollHeight * currentDayIndex / relativeDaysToShow.length, behavior: 'smooth' })
+    }
+    useEffect(() => {
+        scrollToCurrentDayInDayView()
+    }, [currentDate])
     return (
         <div className="h-screen flex flex-col">
             <div className="h-full flex overflow-hidden divide-x-2 w-full">
                 <div className={"border-b border-gray-200 flex flex-col"}>
                     <div className="p-8">
                         <Calendar
-                            value={value}
-                            onChange={(val) => val && setValue(val)}
+                            value={currentDate}
+                            onChange={(val) => val && setCurrentDate(val)}
                             dayStyle={(date) =>
                                 (date.toDateString() === new Date().toDateString() &&
-                                    value.toDateString() !== new Date().toDateString()
+                                    currentDate.toDateString() !== new Date().toDateString()
                                     ? {
                                         backgroundColor: theme.colors.gray[2],
                                         fontWeight: "bold",
@@ -47,7 +57,7 @@ const Home: NextPage = () => {
                     </div>
                     <div className="mt-12 flex w-full justify-center text-center">
                         <h2 className="text-2xl text-center">
-                            <strong>{value.toDateString()}</strong>
+                            <strong>{currentDate.toDateString()}</strong>
                         </h2>
                     </div>
                     <div className="mt-auto flex justify-center m-8">
@@ -75,14 +85,14 @@ const Home: NextPage = () => {
                     </div>
                 </div>
                 <div className="grid grid-cols-3 divide-x-2 flex-grow">
-                    <ScrollArea className="h-full flex-grow">
-                        <DayView date={value} events={events} />
+                    <ScrollArea className="h-full flex-grow" viewportRef={viewport}>
+                        {relativeDaysToShow.map(d => <DayView key={d} date={new Date(currentDate.getTime() + (3600 * 24 * 1000 * d))} events={events} />)}
                     </ScrollArea>
                     <ScrollArea className="h-full flex-grow">
-                        <WeekView date={value} events={events} />
+                        <WeekView date={currentDate} events={events} />
                     </ScrollArea>
                     <ScrollArea className="h-full flex-grow">
-                        <MonthView date={value} events={events} />
+                        <MonthView date={currentDate} events={events} />
                     </ScrollArea>
                 </div>
             </div>
