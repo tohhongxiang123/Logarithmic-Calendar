@@ -3,9 +3,7 @@ import { Calendar } from "@mantine/dates";
 import type { NextPage } from "next";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
-import DayView from "../components/DayView";
-import MonthView from "../components/MonthView";
-import WeekView from "../components/WeekView";
+import { DayView, WeekView, MonthView } from "../components";
 import { CalendarEvent } from "../types/Calendar";
 
 const Home: NextPage = () => {
@@ -26,7 +24,7 @@ const Home: NextPage = () => {
 
     const theme = useMantineTheme()
 
-    const relativeDaysToShow = [-1, 0, 1]
+    const relativeDaysToShow = [0]
     const viewport = useRef<HTMLDivElement>(null)
     const scrollToCurrentDayInDayView = () => {
         const currentDayIndex = relativeDaysToShow.indexOf(0)
