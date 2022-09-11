@@ -1,5 +1,5 @@
 import { CalendarEvent } from "../types/Calendar";
-import { formatTime } from "../utils";
+import { formatStartAndEndTimes, formatTime } from "../utils";
 
 interface MonthViewProps {
     date: Date
@@ -34,7 +34,12 @@ export default function MonthView({ date, events = [] }: MonthViewProps) {
                                     return (
                                         <li key={day.toLocaleDateString()} className="p-2 mb-2">
                                             <span>{day.toLocaleDateString()}</span><br />
-                                            {eventsOnThisDay.map(calendarEvent => <p key={calendarEvent.id} className="font-semibold">{calendarEvent.name}: {formatTime(calendarEvent.start)} - {formatTime(calendarEvent.end)}</p>)}
+                                            {eventsOnThisDay.map(calendarEvent => {
+                                                const { formattedStartDate, formattedEndDate } = formatStartAndEndTimes(calendarEvent.start, calendarEvent.end)
+                                                return (
+                                                    <p key={calendarEvent.id} className="font-semibold">{calendarEvent.name}: {formattedStartDate} - {formattedEndDate}</p>
+                                                )
+                                            })}
                                         </li>
                                     )
                                 }

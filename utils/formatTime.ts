@@ -1,6 +1,16 @@
 export default function formatTime(datetime: Date) {
+    const hours = datetime.getHours()
     const minutes = datetime.getMinutes()
 
-    let options: Intl.DateTimeFormatOptions = { hour: 'numeric', minute: minutes === 0 ? undefined : '2-digit' }
-    return datetime.toLocaleTimeString([], options)
+    const amOrPm = hours >= 12 ? 'PM' : 'AM'
+    let shownHours = hours % 12
+    if (shownHours === 0) {
+        shownHours = 12
+    }
+
+    if (minutes === 0) {
+        return `${shownHours} ${amOrPm}`
+    }
+
+    return `${shownHours}:${minutes} ${amOrPm}`
 }

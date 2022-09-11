@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import { CalendarEvent } from "../types/Calendar"
-import { formatTime } from "../utils"
+import { formatStartAndEndTimes, formatTime } from "../utils"
 
 interface DayViewProps {
     date: Date
@@ -28,7 +28,19 @@ export default function DayView({ date, events }: DayViewProps) {
         }, 0)
     }, [])
 
-    const todaysEvents = events.filter(e => e.start.toDateString() === currentDateString || e.end.toDateString() === currentDateString)
+    const todaysEvents = events.filter(e => {
+        const eventStartsToday = e.start.toDateString() === currentDateString
+        const eventEndsToday = e.end.toDateString() === currentDateString
+        const eventStartsBeforeTodayAndEndsAfterToday = e.start.getTime() <= date.getTime() && e.end.getTime() >= date.getTime()
+        return eventStartsToday || eventEndsToday || eventStartsBeforeTodayAndEndsAfterToday
+    }).sort((calendarEvent1, calendarEvent2) => {
+        // calendar events that are shorter go to the end of the array
+        // so that they can appear on top of longer events
+        const duration1 = calendarEvent1.end.getTime() - calendarEvent1.start.getTime()
+        const duration2 = calendarEvent2.end.getTime() - calendarEvent2.start.getTime()
+        return duration2 - duration1
+    })
+
     return (
         <div className="flex flex-col relative h-full">
             {date.toLocaleDateString() === (new Date()).toLocaleDateString() && <div ref={currentTimingIndicatorRef} className="border-b border-t border-red-500 bg-red-500 h-0 w-full absolute flex" style={{ top: `${percentageOfDayPassed}%` }}>
@@ -49,10 +61,17 @@ export default function DayView({ date, events }: DayViewProps) {
                     todaysEvents.map((calendarEvent, index) => {
                         let top: number;
                         let height: number;
+                    
                         if (calendarEvent.start.toDateString() === currentDateString && calendarEvent.end.toDateString() === currentDateString) {
+                            // event starts and ends today
                             top = getPercentageOfDayPassed(calendarEvent.start, date)
                             height = getPercentageOfDurationInDay(calendarEvent.start, calendarEvent.end)
-                        } else if (calendarEvent.start.toDateString() !== currentDateString) { // started from previous day, ended today
+                        } else if (calendarEvent.start.toDateString() !== currentDateString && calendarEvent.end.toDateString() !== currentDateString) {
+                            // event starts before today, ends after today
+                            top = 0
+                            height = 100
+                        } else if (calendarEvent.start.toDateString() !== currentDateString) { 
+                            // started from previous day, ended today
                             top = 0
                             height = getPercentageOfDayPassed(calendarEvent.end, date)
                         } else { // started from today, end the next day
@@ -60,7 +79,7 @@ export default function DayView({ date, events }: DayViewProps) {
                             height = 100 - top
                         }
 
-                        const options: Intl.DateTimeFormatOptions = { hour: 'numeric', minute: '2-digit' }
+                        const { formattedStartDate, formattedEndDate } = formatStartAndEndTimes(calendarEvent.start, calendarEvent.end)
                         return (
                             <li key={calendarEvent.id} className="absolute bg-gray-300 right-0 bg-opacity-75 p-2 rounded-md"
                                 style={{
@@ -71,7 +90,7 @@ export default function DayView({ date, events }: DayViewProps) {
                                 }}>
                                 <p>
                                     <span>{calendarEvent.name}:</span>
-                                    <span className="font-medium"> {formatTime(calendarEvent.start)} - {formatTime(calendarEvent.end)}</span>
+                                    <span className="font-medium"> {formattedStartDate} - {formattedEndDate}</span>
                                 </p>
                             </li>
                         )

@@ -1,5 +1,6 @@
 import formatTime from "./formatTime";
+import formatStartAndEndTimes from "./formatStartAndEndTimes";
 
 export {
-    formatTime
+    formatTime, formatStartAndEndTimes
 }

@@ -1,6 +1,6 @@
 import { useMantineTheme } from "@mantine/core"
 import { CalendarEvent } from "../types/Calendar"
-import { formatTime } from "../utils"
+import { formatStartAndEndTimes, formatTime } from "../utils"
 
 
 interface WeekViewProps {
@@ -29,9 +29,12 @@ export default function WeekView({ date, events = [] }: WeekViewProps) {
                                     {day.toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' })}
                                 </div>
                                 <div>
-                                    {eventsOnThisDay.map(calendarEvent => (
-                                        <p key={calendarEvent.id} className="font-semibold">{calendarEvent.name}: {formatTime(calendarEvent.start)} - {formatTime(calendarEvent.end)}</p>
-                                    ))}
+                                    {eventsOnThisDay.map(calendarEvent => {
+                                        const { formattedStartDate, formattedEndDate } = formatStartAndEndTimes(calendarEvent.start, calendarEvent.end)
+                                        return (
+                                            <p key={calendarEvent.id} className="font-semibold">{calendarEvent.name}: {formattedStartDate} - {formattedEndDate}</p>
+                                        )
+                                    })}
                                 </div>
                             </li>
                         )
